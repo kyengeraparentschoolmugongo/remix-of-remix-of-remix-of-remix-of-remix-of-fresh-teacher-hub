@@ -17,3 +17,7 @@
 - [x] Clear the fixed navigation on the featured carousel at mobile and desktop sizes.
 - [x] Link movie category headings to dedicated browsing pages with all available category titles.
 - [x] Verify category navigation and the featured layout in the browser and run movie regression tests.
+
+# Small movie poster cards
+- [x] Use cleaned translated titles and show VJ names in the existing thumbnail pill instead of below the title.
+- [x] Verify poster cards with real search results and run movie regression tests.

@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useMovieArtwork } from './useMovieArtwork';
 import type { MediaCardData } from "@/lib/movies/tmdb.functions";
 import { cleanLugandaTitle, getLugandaBadgeLabel, slugifyVj } from "@/lib/movies/luganda-movies";
-import { ThumbnailVjBadge, TranslatedLabel } from "@/components/movies/TranslatedLabel";
+import { ThumbnailVjBadge } from "@/components/movies/TranslatedLabel";
 
 export function MediaCard({ m }: { m: MediaCardData }) {
   const { src, loaded, imgRef, onLoad, onError } = useMovieArtwork(m, false);
@@ -11,11 +11,11 @@ export function MediaCard({ m }: { m: MediaCardData }) {
   const inner = (
     <>
       <div className={`poster-frame relative aspect-[2/3] ${src && !loaded ? "img-shimmer" : ""}`}>
-        {src ? <img ref={imgRef} src={src} alt={m.title} loading="lazy" onLoad={onLoad} onError={onError} className={`h-full w-full object-cover transition-all duration-500 ${loaded ? "opacity-100" : "opacity-0"}`} /> : <div className="flex h-full items-center justify-center p-3 text-center text-sm text-muted-foreground">{title}</div>}
+        {src ? <img ref={imgRef} src={src} alt={title} loading="lazy" onLoad={onLoad} onError={onError} className={`h-full w-full object-cover transition-all duration-500 ${loaded ? "opacity-100" : "opacity-0"}`} /> : <div className="flex h-full items-center justify-center p-3 text-center text-sm text-muted-foreground">{title}</div>}
         <span className="absolute left-2 top-2 rounded-full bg-background/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur">{m.kind === "tv" ? "Series" : "Film"}</span>
+        <ThumbnailVjBadge label={badge} />
       </div>
-      <p className="mt-2 truncate px-0.5 text-sm font-semibold text-foreground">{m.title}</p>
-      <TranslatedLabel label={badge} />
+      <p className="mt-2 truncate px-0.5 text-sm font-semibold text-foreground">{title}</p>
     </>
   );
   return m.kind === "tv" ? (
