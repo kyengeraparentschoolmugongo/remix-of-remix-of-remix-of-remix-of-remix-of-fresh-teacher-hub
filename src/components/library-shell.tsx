@@ -5,7 +5,7 @@ import { AppBar } from '@/components/navigation/app-bar';
 import { SideDrawer } from '@/components/navigation/side-drawer';
 import { activeBranch } from '@/components/navigation/nav-tree';
 import { RouteProgress } from '@/components/navigation/route-progress';
-import { WhatsAppChat } from '@/components/whatsapp-chat';
+import { BottomNav } from '@/components/navigation/bottom-nav';
 import { SiteFooter } from '@/components/site-footer';
 
 export function LibraryShell({ children }: { children: ReactNode }) {
@@ -14,7 +14,6 @@ export function LibraryShell({ children }: { children: ReactNode }) {
   const previousPathname = useRef(pathname);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopClosed, setDesktopClosed] = useState(false);
-  const [installOpen, setInstallOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -25,18 +24,16 @@ export function LibraryShell({ children }: { children: ReactNode }) {
     return () => media.removeEventListener('change', update);
   }, []);
   useEffect(() => {
-    setMobileOpen(false); setInstallOpen(false);
+    setMobileOpen(false);
     if (previousPathname.current !== pathname) {
       setOpenPath([]);
       previousPathname.current = pathname;
     }
   }, [pathname]);
-  const navigate = useCallback(() => { setOpenPath([]); setMobileOpen(false); setInstallOpen(false); }, []);
+  const navigate = useCallback(() => { setOpenPath([]); setMobileOpen(false); }, []);
   const toggleBranch = useCallback((path: number[]) => {
     setOpenPath(current => path.every((index, level) => current[level] === index) ? path.slice(0, -1) : path);
   }, []);
-  const closeInstall = useCallback(() => setInstallOpen(false), []);
-  const toggleInstall = useCallback(() => setInstallOpen(value => !value), []);
   const closeMobile = useCallback(() => setMobileOpen(false), []);
   const closeMobileAndFocus = useCallback(() => {
     setMobileOpen(false);
@@ -79,15 +76,14 @@ export function LibraryShell({ children }: { children: ReactNode }) {
     router.preloadRoute({ to: url.pathname }).catch(() => undefined);
   }, [router]);
   const toggle = useCallback(() => {
-    setInstallOpen(false);
     if (window.matchMedia('(max-width: 767px)').matches) setMobileOpen(value => !value);
     else setDesktopClosed(value => !value);
   }, []);
   return <div onClick={interceptLinks} onPointerOver={preloadLink} onTouchStart={preloadLink} className={`library-shell ${mobileOpen ? 'library-mobile-open' : ''} ${desktopClosed ? 'library-desktop-closed' : ''}`}>
     <RouteProgress />
-    <AppBar triggerRef={trigger} menuExpanded={isMobile ? mobileOpen : !desktopClosed} installOpen={installOpen} onToggleMenu={toggle} onToggleInstall={toggleInstall} onCloseInstall={closeInstall} />
+    <AppBar triggerRef={trigger} menuExpanded={isMobile ? mobileOpen : !desktopClosed} onToggleMenu={toggle} />
     <SideDrawer mobileOpen={mobileOpen} pathname={pathname} openPath={openPath} onClose={closeMobile} onCloseAndFocus={closeMobileAndFocus} onToggleBranch={toggleBranch} onNavigate={navigate} />
     <main className="library-content">{children}<SiteFooter /></main>
-    <WhatsAppChat />
+    <BottomNav />
   </div>;
 }

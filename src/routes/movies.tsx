@@ -3,6 +3,7 @@ import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router"
 import { Navbar } from "@/components/movies/Navbar";
 import { THEME_KEY } from "@/components/movies/ThemeToggle";
 import { SiteFooter } from "@/components/site-footer";
+import { BottomNav } from '@/components/navigation/bottom-nav';
 
 export const Route = createFileRoute("/movies")({
   staticData: { sitemap: false },
@@ -48,6 +49,7 @@ function MovieLayout() {
         <Outlet />
       </main>
       <SiteFooter />
+      <BottomNav />
     </div>
   );
 }

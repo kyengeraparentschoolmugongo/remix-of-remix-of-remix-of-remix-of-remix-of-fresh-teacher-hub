@@ -96,5 +96,4 @@ html:has(.freshflix-shell.freshflix-light) {
 @keyframes movie-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 @keyframes freshflix-route-progress { 0% { width: 0; left: 0; } 60% { width: 70%; left: 10%; } 100% { width: 10%; left: 100%; } }
 @media (min-width: 640px) { .freshflix-shell .landscape-card { width: 18rem; } }
-@media (max-width: 390px) { .library-appbar .library-brand { max-width: 132px; } .library-appbar-actions { gap: 2px; } .library-appbar .library-icon-control { width: 30px; min-width: 30px; } }
 @media (prefers-reduced-motion: reduce) { .freshflix-shell .img-shimmer { animation: none; } .freshflix-shell * { transition-duration: 0.01ms !important; } }

@@ -26,7 +26,7 @@ export const InstallCard = memo(function InstallCard({ open, onClose }: { open: 
     const previous = document.activeElement;
     dialogRef.current?.querySelector<HTMLButtonElement>('button')?.focus();
     const close = (event: MouseEvent) => {
-      if (event.target instanceof Element && !dialogRef.current?.contains(event.target) && !event.target.closest('.library-appbar-actions, .library-share-popup')) onClose();
+      if (event.target instanceof Element && !dialogRef.current?.contains(event.target) && !event.target.closest('.app-bottom-nav, .library-share-popup')) onClose();
     };
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') { event.preventDefault(); onClose(); }

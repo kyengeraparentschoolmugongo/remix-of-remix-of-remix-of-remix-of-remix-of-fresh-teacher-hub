@@ -1,22 +1,17 @@
 import { memo, useEffect, useRef, useState, type RefObject } from 'react';
-import { Download, Film, Menu, Search } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './theme-toggle';
 import { QuickSearch } from './quick-search';
-import { InstallCard } from './install-card';
 import { preloadLibrarySearch } from '@/lib/library-search';
 
 interface AppBarProps {
   triggerRef: RefObject<HTMLButtonElement | null>;
   menuExpanded: boolean;
-  installOpen: boolean;
   onToggleMenu: () => void;
-  onToggleInstall: () => void;
-  onCloseInstall: () => void;
 }
 
-export const AppBar = memo(function AppBar({ triggerRef, menuExpanded, installOpen, onToggleMenu, onToggleInstall, onCloseInstall }: AppBarProps) {
+export const AppBar = memo(function AppBar({ triggerRef, menuExpanded, onToggleMenu }: AppBarProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const searchTrigger = useRef<HTMLButtonElement>(null);
   const [shortcut, setShortcut] = useState('Ctrl K');
@@ -45,14 +40,10 @@ export const AppBar = memo(function AppBar({ triggerRef, menuExpanded, installOp
     return () => window.removeEventListener('keydown', onKey);
   }, []);
   return <><header className="library-appbar">
-    <Button ref={triggerRef} variant="source" size="source" className="library-icon-control" aria-label="Toggle class menu" aria-controls="library-navigation" aria-expanded={menuExpanded} onClick={onToggleMenu} title="Class menu"><Menu /></Button>
-    <Button asChild variant="source" size="source" className="library-brand"><Link to="/"><span>FRESH TEACHER'S LIBRARY</span><span className="library-brand-caption" aria-label="Since COVID-19"><span aria-hidden="true">Since C<span className="library-brand-virus">🦠</span>VID-19</span></span></Link></Button>
+    <Button ref={triggerRef} variant="source" size="source" className="library-brand" aria-label="Toggle class menu" aria-controls="library-navigation" aria-expanded={menuExpanded} onClick={onToggleMenu} title="Class menu"><span>FRESH TEACHER'S LIBRARY</span><span className="library-brand-caption" aria-label="Since COVID-19"><span aria-hidden="true">Since C<span className="library-brand-virus">🦠</span>VID-19</span></span></Button>
     <div className="library-appbar-actions">
-      <Button asChild variant="source" size="source" className="library-icon-control" title="FreshFlix Movies"><Link to="/movies" aria-label="FreshFlix Movies"><Film /></Link></Button>
-      <Button ref={searchTrigger} variant="source" size="source" className="library-icon-control library-search-control" aria-label="Search the library" aria-haspopup="dialog" aria-expanded={searchOpen} title={`Search the library (${shortcut})`} onPointerEnter={warmSearch} onFocus={warmSearch} onClick={() => { warmSearch(); onCloseInstall(); setSearchOpen(true); }}><Search /><kbd className="library-search-shortcut" aria-hidden="true">{shortcut}</kbd></Button>
+      <Button ref={searchTrigger} variant="source" size="source" className="library-icon-control library-search-control" aria-label="Search the library" aria-haspopup="dialog" aria-expanded={searchOpen} title={`Search the library (${shortcut})`} onPointerEnter={warmSearch} onFocus={warmSearch} onClick={() => { warmSearch(); setSearchOpen(true); }}><Search /><kbd className="library-search-shortcut" aria-hidden="true">{shortcut}</kbd></Button>
       <ThemeToggle />
-      <Button variant="source" size="source" className="library-icon-control library-install-control" aria-label="Install the app" aria-haspopup="dialog" aria-expanded={installOpen} title="Install the app" onClick={onToggleInstall}><Download /></Button>
-      <InstallCard open={installOpen} onClose={onCloseInstall} />
     </div>
   </header><QuickSearch open={searchOpen} onOpenChange={setSearchOpen} triggerRef={searchTrigger} /></>;
 });

@@ -12,7 +12,7 @@ vi.mock('@tanstack/react-router', () => ({ Link: ({ children, to }: { children: 
 afterEach(() => { cleanup(); vi.clearAllMocks(); vi.unstubAllGlobals(); Reflect.deleteProperty(navigator, 'connection'); });
 
 function renderAppBar() {
-  return render(<AppBar triggerRef={createRef<HTMLButtonElement>()} menuExpanded installOpen={false} onToggleMenu={vi.fn()} onToggleInstall={vi.fn()} onCloseInstall={vi.fn()} />);
+  return render(<AppBar triggerRef={createRef<HTMLButtonElement>()} menuExpanded onToggleMenu={vi.fn()} />);
 }
 
 it('loads the search index during browser idle time', () => {

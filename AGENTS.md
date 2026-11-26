@@ -30,6 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Imported application architecture
+- Mount the shared bottom navigation in both section shells and reuse the existing install card and chat state through a supplied trigger; this keeps help and installation behavior consistent without coupling section themes.
 - Isolate FreshFlix routes under `/movies` and its modules under movie-specific directories; scoped theme variables prevent movie styles and query keys from changing the library.
 - Resolve movie shelf links and paginated category requests through the shared movie category registry; this keeps genre, list, and VJ destinations consistent and prevents unrelated fallback results.
 - Keep category pagination in validated URL search state and prime page-specific movie query caches in loaders; this preserves reload and browser-history behavior without mixing category results.

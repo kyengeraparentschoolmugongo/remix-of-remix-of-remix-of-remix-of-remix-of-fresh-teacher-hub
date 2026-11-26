@@ -21,3 +21,7 @@
 # Small movie poster cards
 - [x] Use cleaned translated titles and show VJ names in the existing thumbnail pill instead of below the title.
 - [x] Verify poster cards with real search results and run movie regression tests.
+
+# Shared bottom navigation
+- [x] Simplify the library header and add Home, Entertainment, Install, and WhatsApp Help bottom tabs.
+- [x] Preserve install and chat behavior and verify mobile and desktop navigation.
