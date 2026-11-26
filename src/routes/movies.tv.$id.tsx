@@ -1,0 +1,83 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { getDetail } from "@/lib/movies/tmdb.functions";
+import { DetailPage } from "@/components/movies/DetailPage";
+import { homeQuery } from "@/lib/movies/home-query";
+
+const q = (id: string) =>
+  queryOptions({
+    queryKey: ["freshflix-tv", id],
+    queryFn: () => getDetail({ data: { kind: "tv", id: Number(id) } }),
+    staleTime: 600_000,
+  });
+
+export const Route = createFileRoute("/movies/tv/$id")({
+  staticData: { sitemap: false },
+  loader: async ({ context, params }) => {
+    void context.queryClient.prefetchQuery(homeQuery);
+    const detail = await context.queryClient.ensureQueryData(q(params.id));
+    return detail;
+  },
+  head: ({ params, loaderData }) => {
+    if (!loaderData) {
+      return {
+        meta: [{ title: "Unavailable — FRESHFLIX" }, { name: "description", content: "This FreshFlix title is currently unavailable." }, { property: "og:title", content: "Unavailable — FRESHFLIX" }, { property: "og:description", content: "This FreshFlix title is currently unavailable." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }],
+      };
+    }
+    const t = `${loaderData.title} — FRESHFLIX`;
+    const desc = (loaderData.overview || "Details, cast and trailer on FRESHFLIX.").slice(0, 155);
+    const pageUrl = `/movies/tv/${params.id}`;
+    const meta = [
+      { title: t },
+      { name: "description", content: desc },
+      { property: "og:title", content: t },
+      { property: "og:description", content: desc },
+      { property: "og:type", content: "video.tv_show" },
+      { property: "og:url", content: pageUrl },
+      { name: "twitter:card", content: "summary_large_image" },
+    ];
+    if (loaderData.backdrop)
+      meta.push(
+        { property: "og:image", content: loaderData.backdrop },
+        { name: "twitter:image", content: loaderData.backdrop },
+      );
+    return {
+      meta,
+      links: [{ rel: "canonical", href: pageUrl }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TVSeries",
+            name: loaderData.title,
+            description: loaderData.overview || desc,
+            ...(loaderData.year ? { datePublished: loaderData.year } : {}),
+            ...(loaderData.backdrop ?? loaderData.poster
+              ? { image: loaderData.backdrop ?? loaderData.poster }
+              : {}),
+            ...(loaderData.genres.length > 0 ? { genre: loaderData.genres } : {}),
+          }),
+        },
+      ],
+    };
+  },
+  component: Page,
+  errorComponent: () => (
+    <div className="p-24 text-center text-muted-foreground">
+      It's not yet available. Try again later.
+    </div>
+  ),
+  notFoundComponent: () => (
+    <div className="p-24 text-center text-muted-foreground">
+      It's not yet available. Try again later.
+    </div>
+  ),
+});
+
+function Page() {
+  const { id } = Route.useParams();
+  const { data } = useSuspenseQuery(q(id));
+  const { data: home } = useQuery(homeQuery);
+  return <DetailPage d={data} rows={home?.rows ?? []} />;
+}
